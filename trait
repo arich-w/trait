@@ -1,0 +1,39 @@
+-- main.lua
+
+-- Create the GUI
+local ScreenGui = Instance.new("ScreenGui")
+local TextButton = Instance.new("TextButton")
+local TextLabel = Instance.new("TextLabel")
+
+ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+TextButton.Parent = ScreenGui
+TextButton.Size = UDim2.new(0, 200, 0, 50)
+TextButton.Position = UDim2.new(0.5, -100, 0.5, -25)
+TextButton.Text = "Roll Trait"
+
+TextLabel.Parent = ScreenGui
+TextLabel.Size = UDim2.new(0, 200, 0, 50)
+TextLabel.Position = UDim2.new(0.5, -100, 0.5, 50)
+TextLabel.Text = "Rolled Trait: None"
+
+-- Define a list of traits
+local traits = {"Strong", "Fast", "Smart", "Brave", "Agile"}
+
+-- Function to roll a random trait
+local function rollTrait()
+    local randomIndex = math.random(1, #traits)
+    return traits[randomIndex]
+end
+
+-- When the button is clicked, roll a trait and display it
+TextButton.MouseButton1Click:Connect(function()
+    local rolledTrait = rollTrait()
+    TextLabel.Text = "Rolled Trait: " .. rolledTrait
+
+    -- Save the rolled trait
+    game.Players.LocalPlayer:SetAttribute("Trait", rolledTrait)
+
+    -- Communicate with the server to save the trait
+    game:GetService("ReplicatedStorage"):WaitForChild("SaveTrait"):FireServer(rolledTrait)
+end)
